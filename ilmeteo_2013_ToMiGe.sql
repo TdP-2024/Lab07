@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS `situazione` (
   `Pressioneslm` int(11) NOT NULL,
   `Pressionemedia` int(11) NOT NULL,
   `Pioggia` int(11) NOT NULL,
-  `Fenomeni` varchar(50) NOT NULL
+  `Fenomeni` varchar(50) NOT NULL,
+  PRIMARY KEY (`Localita`,`Data`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dump dei dati della tabella meteo.situazione: ~1.194 rows (circa)
