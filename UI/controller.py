@@ -33,6 +33,7 @@ class Controller:
         self._view.lst_result.controls.append(ft.Text(f"Il costo della sequenza è {costo}"))
         for fermata in sequenza:
             self._view.lst_result.controls.append(ft.Text(fermata))
+        self._view.update_page()
 
 
     def read_mese(self, e):
