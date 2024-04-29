@@ -40,15 +40,20 @@ class Model:
         :param sequenza: la sequenza di situazioni di cui calcolare il costo.
         :return: il costo della sequenza."""
         costo = 0
-        for i in range(len(sequenza)):
-            localita_short = set()
+        # primo giorno
+        costo += sequenza[0].umidita
+        # secondo giorno
+        costo += sequenza[1].umidita
+        if sequenza[0].localita != sequenza[1].localita:
+            costo += 100
+        #altri giorni
+        for i in range(2, len(sequenza)):
+            sequenza_short = sequenza[i-2:i+1]
             costo += sequenza[i].umidita
-            if i < (len(sequenza) - 2):
-                localita_short.add(sequenza[i].localita)
-                localita_short.add(sequenza[i + 1].localita)
-                localita_short.add(sequenza[i + 2].localita)
-                if len(localita_short) == 3:
-                    costo += 100
+            if sequenza_short[2].localita != sequenza_short[1].localita:
+                costo += 100
+            elif sequenza_short[2].localita != sequenza_short[0].localita:
+                costo += 100
         return costo
 
     def __is_admissible(self, parziale: list[Situazione], situazione: Situazione) -> bool:
@@ -63,21 +68,34 @@ class Model:
                 visite[stop.localita] += 1
             visite[situazione.localita] += 1
 
-            for visita in visite.values():
-                if visita > 6:
-                    return False
+            # print(list(visite.values())>6)
+            # for visita in visite.values():
+            #     if visita > 6:
+            #         return False
+            if any(v > 6 for v in visite.values()):
+                return False
 
         # check che il tecnico non si sposti prima di aver trascorso 3 giorni consecutivi nella stessa
         # citta
         if len(parziale) >= 3:
-            last_stop = parziale[len(parziale) - 1].localita
+            last_stop = parziale[-1].localita
             permanenza = 0
             for stop in parziale[-3:]:
                 if stop.localita == last_stop:
                     permanenza += 1
             if permanenza < 3 and situazione.localita != last_stop:
                 return False
-        return True
+            else:
+                return True
+        else:
+            for stop in parziale:
+                if stop.localita != situazione.localita:
+                    return False
+            return True
+
+
+if __name__ == "__main__":
+    print("CIAO")
 
 
 
